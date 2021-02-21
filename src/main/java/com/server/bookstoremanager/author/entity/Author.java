@@ -1,6 +1,5 @@
 package com.server.bookstoremanager.author.entity;
 
-
 import com.server.bookstoremanager.book.entity.Book;
 import com.server.bookstoremanager.common.entity.Auditable;
 import lombok.Data;
