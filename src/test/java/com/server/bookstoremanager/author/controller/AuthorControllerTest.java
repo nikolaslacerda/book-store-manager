@@ -75,4 +75,21 @@ public class AuthorControllerTest {
                 .content(asJsonString(expectedCreatedAuthorDTO)))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void whenGetWithValidIdIsCalledThenStatusOkShouldBeReturned() throws Exception {
+        //given
+        AuthorDTO expectedFoundAuthorDTO = authorBuilder.buildAuthorDTO();
+
+        //when
+        when(authorService.findById(expectedFoundAuthorDTO.getId())).thenReturn(expectedFoundAuthorDTO);
+
+        //then
+        mockMvc.perform(get(AUTHOR_API_URL_PATH + "/" + expectedFoundAuthorDTO.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", Is.is(expectedFoundAuthorDTO.getId().intValue())))
+                .andExpect(jsonPath("$.name", Is.is(expectedFoundAuthorDTO.getName())))
+                .andExpect(jsonPath("$.age", Is.is(expectedFoundAuthorDTO.getAge())));
+    }
 }
