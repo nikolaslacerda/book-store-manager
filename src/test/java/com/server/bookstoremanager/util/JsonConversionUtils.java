@@ -7,14 +7,14 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class JsonConversionUtils {
 
-    public static String asJsonString(Object userDTO) {
+    public static String asJsonString(Object objectDTO) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
             objectMapper.registerModules(new JavaTimeModule());
 
-            return objectMapper.writeValueAsString(userDTO);
+            return objectMapper.writeValueAsString(objectDTO);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
