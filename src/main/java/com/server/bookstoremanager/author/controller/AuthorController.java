@@ -3,7 +3,6 @@ package com.server.bookstoremanager.author.controller;
 import com.server.bookstoremanager.author.dto.AuthorDTO;
 import com.server.bookstoremanager.author.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,5 +34,11 @@ public class AuthorController implements AuthorControllerDocs {
     @GetMapping
     public List<AuthorDTO> findAll() {
         return authorService.findAll();
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        authorService.delete(id);
     }
 }
