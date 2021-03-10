@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -30,6 +31,9 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserService userService;
@@ -49,9 +53,11 @@ public class UserServiceTest {
         String expectedCreationMessage = "User nikolas with id 1 successfully created";
         String expectedUserEmail = expectedCreatedUserDTO.getEmail();
         String expectedUsername = expectedCreatedUserDTO.getUsername();
+        String expectedPassword = expectedCreatedUserDTO.getPassword();
 
         //when
         when(userRepository.findByEmailOrUsername(expectedUserEmail, expectedUsername)).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(expectedPassword)).thenReturn(expectedPassword);
         when(userRepository.save(expectedCreatedUser)).thenReturn(expectedCreatedUser);
         MessageDTO creationMessage = userService.create(expectedCreatedUserDTO);
 
@@ -111,10 +117,12 @@ public class UserServiceTest {
         expectedUpdatedUserDTO.setUsername("nikolasupdated");
         User expectedUpdatedUser = userMapper.toModel(expectedUpdatedUserDTO);
         Long expectedUpdatedUserId = expectedUpdatedUserDTO.getId();
+        String expectedUpdatedUserPassword = expectedUpdatedUserDTO.getPassword();
         String expectedUpdatedMessage = "User nikolasupdated with id 1 successfully updated";
 
         //when
         when(userRepository.findById(expectedUpdatedUserId)).thenReturn(Optional.of(expectedUpdatedUser));
+        when(passwordEncoder.encode(expectedUpdatedUserPassword)).thenReturn(expectedUpdatedUserPassword);
         when(userRepository.save(expectedUpdatedUser)).thenReturn(expectedUpdatedUser);
         MessageDTO updatedMessage = userService.update(expectedUpdatedUserId, expectedUpdatedUserDTO);
 
