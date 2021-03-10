@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.server.bookstoremanager.user.util.MessageUtils.creationMessage;
+import static com.server.bookstoremanager.user.util.MessageUtils.updatedMessage;
+
 @Service
 public class UserService {
 
@@ -31,8 +34,18 @@ public class UserService {
         return creationMessage(createdUser);
     }
 
+    public MessageDTO update(Long id, UserDTO userDTO) {
+        User foundUser = verifyAndGetIfExists(id);
+        userDTO.setId(foundUser.getId());
+
+        User userToUpdate = userMapper.toModel(userDTO);
+        userToUpdate.setCreatedDate(foundUser.getCreatedDate());
+        User updatedUser = userRepository.save(userToUpdate);
+        return updatedMessage(updatedUser);
+    }
+
     public void delete(Long id) {
-        verifyIfExists(id);
+        verifyAndGetIfExists(id);
         userRepository.deleteById(id);
     }
 
@@ -43,17 +56,8 @@ public class UserService {
         }
     }
 
-    private void verifyIfExists(Long id) {
-        userRepository.findById(id)
+    private User verifyAndGetIfExists(Long id) {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
-    }
-
-    private MessageDTO creationMessage(User createdUser) {
-        String username = createdUser.getUsername();
-        Long id = createdUser.getId();
-        String createdUserMessage = String.format("User %s with id %s successfully created", username, id);
-        return MessageDTO.builder()
-                .message(createdUserMessage)
-                .build();
     }
 }
