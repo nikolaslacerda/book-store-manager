@@ -22,16 +22,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final String USERS_API_URL = "/api/v1/users/**";
-    public static final String PUBLISHERS_API_URL = "/api/v1/publishers/**";
-    public static final String AUTHORS_API_URL = "/api/v1/authors/**";
-    public static final String BOOKS_API_URL = "/api/v1/books/**";
-    public static final String H2_CONSOLE_URL = "/h2-console/**";
-    public static final String SWAGGER_URL = "/swagger-ui.html";
-    public static final String ROLE_ADMIN = Role.ADMIN.getDescription();
-    public static final String ROLE_USER = Role.USER.getDescription();
+    private static final String USERS_API_URL = "/api/v1/users/**";
+    private static final String PUBLISHERS_API_URL = "/api/v1/publishers/**";
+    private static final String AUTHORS_API_URL = "/api/v1/authors/**";
+    private static final String BOOKS_API_URL = "/api/v1/books/**";
+    private static final String H2_CONSOLE_URL = "/h2-console/**";
+    private static final String SWAGGER_URL = "/swagger-ui.html";
+    private static final String ROLE_ADMIN = Role.ADMIN.getDescription();
+    private static final String ROLE_USER = Role.USER.getDescription();
 
-    public static final String[] SWAGGER_RESOURCES = {
+    private static final String[] SWAGGER_RESOURCES = {
             "/v2/api-docs",
             "/swagger-resources",
             "/swagger-resources/**",
