@@ -1,7 +1,10 @@
 package com.server.bookstoremanager.user.controller;
 
+import com.server.bookstoremanager.user.dto.JwtRequest;
+import com.server.bookstoremanager.user.dto.JwtResponse;
 import com.server.bookstoremanager.user.dto.MessageDTO;
 import com.server.bookstoremanager.user.dto.UserDTO;
+import com.server.bookstoremanager.user.service.AuthenticationService;
 import com.server.bookstoremanager.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +18,12 @@ public class UserController implements UserControllerDocs {
 
     private UserService userService;
 
+    private AuthenticationService authenticationService;
+
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService,  AuthenticationService authenticationService) {
         this.userService = userService;
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping
@@ -35,5 +41,10 @@ public class UserController implements UserControllerDocs {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         userService.delete(id);
+    }
+
+    @PostMapping(value = "/authenticate")
+    public JwtResponse createAuthenticationToken(@RequestBody @Valid JwtRequest jwtRequest) {
+        return authenticationService.createAuthenticationToken(jwtRequest);
     }
 }
