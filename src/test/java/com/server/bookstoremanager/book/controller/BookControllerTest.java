@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -76,12 +77,32 @@ public class BookControllerTest {
 
     @Test
     void whenPostIsCalledWithoutRequiredFieldsThenBadRequestShouldBeReturned() throws Exception {
+        //when
         BookRequestDTO expectedBookToCreateDTO = bookRequestDTOBuilder.buildRequestBookDTO();
         expectedBookToCreateDTO.setIsbn(null);
 
+        //then
         mockMvc.perform(post(BOOKS_API_URL_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonConversionUtils.asJsonString(expectedBookToCreateDTO)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void whenGetIsCalledThenStatusOkShouldBeInformed() throws Exception {
+        //given
+        BookRequestDTO expectedBookToFindDTO = bookRequestDTOBuilder.buildRequestBookDTO();
+        BookResponseDTO expectedFoundBookDTO = bookResponseDTOBuilder.buildBookResponseDTO();
+
+        //when
+        when(bookService.findByIdAndUser(any(AuthenticatedUser.class), eq(expectedBookToFindDTO.getId()))).thenReturn(expectedFoundBookDTO);
+
+        //then
+        mockMvc.perform(get(BOOKS_API_URL_PATH + "/" + expectedBookToFindDTO.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(expectedFoundBookDTO.getId().intValue())))
+                .andExpect(jsonPath("$.name", is(expectedFoundBookDTO.getName())))
+                .andExpect(jsonPath("$.isbn", is(expectedFoundBookDTO.getIsbn())));
     }
 }
