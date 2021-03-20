@@ -23,6 +23,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -141,5 +143,32 @@ public class BookServiceTest {
 
         //then
         assertThrows(BookNotFoundException.class, () -> bookService.findByIdAndUser(authenticatedUser, expectedBookToFindDTO.getId()));
+    }
+
+    @Test
+    void whenListBookIsCalledThenItShouldBeReturned() {
+        //given
+        BookResponseDTO expectedFoundBookDTO = bookResponseDTOBuilder.buildBookResponseDTO();
+        Book expectedFoundBook = bookMapper.toModel(expectedFoundBookDTO);
+
+        //when
+        when(userService.verifyAndGetUserIfExists(authenticatedUser.getUsername())).thenReturn(new User());
+        when(bookRepository.findAllByUser(any(User.class)))
+                .thenReturn(Collections.singletonList(expectedFoundBook));
+        List<BookResponseDTO> bookResponseList = bookService.findAllByUser(authenticatedUser);
+
+        //then
+        assertThat(bookResponseList.size(), is(1));
+        assertThat(bookResponseList.get(0), is(equalTo(expectedFoundBookDTO)));
+    }
+
+    @Test
+    void whenListBookIsCalledThenEmptyListShouldBeReturned() {
+        //when
+        when(userService.verifyAndGetUserIfExists(authenticatedUser.getUsername())).thenReturn(new User());
+        when(bookRepository.findAllByUser(any(User.class))).thenReturn(Collections.emptyList());
+        List<BookResponseDTO> bookResponseDTOListByUser = bookService.findAllByUser(authenticatedUser);
+        //then
+        assertThat(bookResponseDTOListByUser.size(), is(0));
     }
 }

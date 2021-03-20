@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import java.util.Collections;
+
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -104,5 +106,24 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$.id", is(expectedFoundBookDTO.getId().intValue())))
                 .andExpect(jsonPath("$.name", is(expectedFoundBookDTO.getName())))
                 .andExpect(jsonPath("$.isbn", is(expectedFoundBookDTO.getIsbn())));
+    }
+
+    @Test
+    void whenGetListIsCalledThenStatusOkShouldBeInformed() throws Exception {
+        //given
+        BookRequestDTO expectedBookToFind = bookRequestDTOBuilder.buildRequestBookDTO();
+        BookResponseDTO expectedCreatedBookDTO = bookResponseDTOBuilder.buildBookResponseDTO();
+
+        //when
+        when(bookService.findAllByUser(any(AuthenticatedUser.class)))
+                .thenReturn(Collections.singletonList(expectedCreatedBookDTO));
+
+        //then
+        mockMvc.perform(get(BOOKS_API_URL_PATH)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(expectedBookToFind.getId().intValue())))
+                .andExpect(jsonPath("$[0].name", is(expectedBookToFind.getName())))
+                .andExpect(jsonPath("$[0].isbn", is(expectedBookToFind.getIsbn())));
     }
 }
