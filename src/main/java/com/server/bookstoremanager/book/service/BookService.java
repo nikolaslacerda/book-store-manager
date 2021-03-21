@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,5 +70,17 @@ public class BookService {
                 .ifPresent(duplicatedBook -> {
                     throw new BookAlreadyExistsException(bookRequestDTO.getName(), bookRequestDTO.getIsbn(), foundAuthenticatedUser.getUsername());
                 });
+    }
+
+    @Transactional
+    public void deleteByIdAndUser(AuthenticatedUser authenticatedUser, Long bookId) {
+        User foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
+        Book foundBookToDelete = verifyAndGetIfExists(bookId, foundAuthenticatedUser);
+        bookRepository.deleteByIdAndUser(foundBookToDelete.getId(), foundAuthenticatedUser);
+    }
+
+    private Book verifyAndGetIfExists(Long bookId, User foundAuthenticatedUser) {
+        return bookRepository.findByIdAndUser(bookId, foundAuthenticatedUser)
+                .orElseThrow(() -> new BookNotFoundException(bookId));
     }
 }

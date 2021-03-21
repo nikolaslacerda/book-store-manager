@@ -20,7 +20,7 @@ public class BookController implements BookControllerDocs {
 
     @Autowired
     public BookController(BookService bookService) {
-        this.bookService     = bookService;
+        this.bookService = bookService;
     }
 
     @PostMapping
@@ -39,5 +39,13 @@ public class BookController implements BookControllerDocs {
     @GetMapping
     public List<BookResponseDTO> findAllByUser(@AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
         return bookService.findAllByUser(authenticatedUser);
+    }
+
+    @DeleteMapping("/{bookId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteByIdAndUser(
+            @AuthenticationPrincipal AuthenticatedUser authenticatedUser,
+            @PathVariable Long bookId) {
+        bookService.deleteByIdAndUser(authenticatedUser, bookId);
     }
 }
