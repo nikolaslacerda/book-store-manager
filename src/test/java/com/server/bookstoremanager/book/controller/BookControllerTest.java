@@ -128,6 +128,28 @@ public class BookControllerTest {
     }
 
     @Test
+    void whenPUTIsCalledThenStatusOkShouldBeInformed() throws Exception {
+        //given
+        BookRequestDTO expectedBookToUpdateDTO = bookRequestDTOBuilder.buildRequestBookDTO();
+        BookResponseDTO expectedUpdatedBookDTO = bookResponseDTOBuilder.buildBookResponseDTO();
+
+        //when
+        when(bookService.updateByUser(
+                any(AuthenticatedUser.class),
+                eq(expectedBookToUpdateDTO.getId()),
+                eq(expectedBookToUpdateDTO))).thenReturn(expectedUpdatedBookDTO);
+
+        //then
+        mockMvc.perform(put(BOOKS_API_URL_PATH + "/" + expectedBookToUpdateDTO.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonConversionUtils.asJsonString(expectedBookToUpdateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(expectedBookToUpdateDTO.getId().intValue())))
+                .andExpect(jsonPath("$.name", is(expectedBookToUpdateDTO.getName())))
+                .andExpect(jsonPath("$.isbn", is(expectedBookToUpdateDTO.getIsbn())));
+    }
+
+    @Test
     void whenDeleteIsCalledThenStatusNoContentShouldBeInformed() throws Exception {
         //given
         BookRequestDTO expectedBookToDelete = bookRequestDTOBuilder.buildRequestBookDTO();

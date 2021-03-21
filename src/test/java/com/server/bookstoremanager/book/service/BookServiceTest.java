@@ -174,6 +174,48 @@ public class BookServiceTest {
     }
 
     @Test
+    void whenExistingBookIdIsInformedThenItShouldBeUpdated() {
+        //given
+        BookRequestDTO expectedBookToUpdateDTO = bookRequestDTOBuilder.buildRequestBookDTO();
+        BookResponseDTO expectedUpdatedBookDTO = bookResponseDTOBuilder.buildBookResponseDTO();
+        Book expectedUpdatedBook = bookMapper.toModel(expectedUpdatedBookDTO);
+
+        //when
+        when(userService.verifyAndGetUserIfExists(authenticatedUser.getUsername())).thenReturn(new User());
+        when(bookRepository.findByIdAndUser(eq(expectedBookToUpdateDTO.getId()), any(User.class)))
+                .thenReturn(Optional.of(expectedUpdatedBook));
+        when(authorService.verifyAndGetIfExists(expectedBookToUpdateDTO.getAuthorId())).thenReturn(new Author());
+        when(publisherService.verifyAndGetIfExists(expectedBookToUpdateDTO.getPublisherId())).thenReturn(new Publisher());
+        when(bookRepository.save(any(Book.class))).thenReturn(expectedUpdatedBook);
+        BookResponseDTO updatedBookResponse = bookService.updateByUser(
+                authenticatedUser,
+                expectedBookToUpdateDTO.getId(),
+                expectedBookToUpdateDTO);
+
+        //then
+        assertThat(updatedBookResponse, is(equalTo(expectedUpdatedBookDTO)));
+    }
+
+    @Test
+    void whenNotExistingBookIdIsInformedThenAnExceptionItShouldBeThrown() {
+        //given
+        BookRequestDTO expectedBookToUpdateDTO = bookRequestDTOBuilder.buildRequestBookDTO();
+
+        //when
+        when(userService.verifyAndGetUserIfExists(authenticatedUser.getUsername())).thenReturn(new User());
+        when(bookRepository.findByIdAndUser(
+                eq(expectedBookToUpdateDTO.getId()),
+                any(User.class)))
+                .thenReturn(Optional.empty());
+
+        //then
+        assertThrows(BookNotFoundException.class, () -> bookService.updateByUser(
+                authenticatedUser,
+                expectedBookToUpdateDTO.getId(),
+                expectedBookToUpdateDTO));
+    }
+
+    @Test
     void whenExistingBookIdIsInformedThenItShouldBeDeleted() {
         //given
         BookRequestDTO expectedBookToDeleteDTO = bookRequestDTOBuilder.buildRequestBookDTO();

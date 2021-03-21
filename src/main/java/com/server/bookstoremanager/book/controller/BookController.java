@@ -41,6 +41,14 @@ public class BookController implements BookControllerDocs {
         return bookService.findAllByUser(authenticatedUser);
     }
 
+    @PutMapping("/{bookId}")
+    public BookResponseDTO updateByUser(
+            @AuthenticationPrincipal AuthenticatedUser authenticatedUser,
+            @PathVariable Long bookId,
+            @RequestBody @Valid BookRequestDTO bookRequestDTO) {
+        return bookService.updateByUser(authenticatedUser, bookId, bookRequestDTO);
+    }
+
     @DeleteMapping("/{bookId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByIdAndUser(
