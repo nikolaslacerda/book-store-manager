@@ -1,6 +1,6 @@
-<p align="center">
-   <h1>Book Store Manager</h1>
-</p>
+<h1 align="center">
+   Book Store Manager
+<h1>
 
 <p align="center">	
    <a href="https://www.linkedin.com/in/nikolaslacerda/">
@@ -27,7 +27,7 @@
 
 ## :computer: Projeto
 
-Projeto realizado no curso [APIs com Spring Boot: do início à produção com boas práticas](https://www.udemy.com/course/spring-boot-api/), o projeto tem foco conceitos sobre o Spring Boot, boas práticas, testes unitários e segurança.
+Projeto realizado no curso [APIs com Spring Boot: do início à produção com boas práticas](https://www.udemy.com/course/spring-boot-api/). O projeto tem foco conceitos sobre o Spring Boot, boas práticas, testes unitários e segurança.
 
 ## :rocket: Tecnologias
 
