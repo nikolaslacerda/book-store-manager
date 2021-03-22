@@ -1,6 +1,6 @@
 <h1 align="center">
    Book Store Manager
-<h1>
+</h1>
 
 <p align="center">	
    <a href="https://www.linkedin.com/in/nikolaslacerda/">
