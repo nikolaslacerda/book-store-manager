@@ -27,7 +27,7 @@
 
 ## :computer: Projeto
 
-Projeto realizado no curso [APIs com Spring Boot: do início à produção com boas práticas](https://www.udemy.com/course/spring-boot-api/). O projeto tem foco conceitos sobre o Spring Boot, boas práticas, testes unitários e segurança.
+Projeto realizado no curso [APIs com Spring Boot: do início à produção com boas práticas](https://www.udemy.com/course/spring-boot-api/). O projeto tem como foco conceitos sobre o Spring Boot, boas práticas, testes unitários e segurança.
 
 ## :rocket: Tecnologias
 
